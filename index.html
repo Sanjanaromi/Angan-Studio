@@ -1,0 +1,713 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aangan Studio — Enquiry Dashboard</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>">
+<style>
+:root{--font-anthropic-sans:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;--font-anthropic-serif:Georgia,'Times New Roman',serif;
+--cds-gap-xs:4px;--cds-gap-sm:8px;--cds-gap-md:16px;--cds-gap-lg:24px;--cds-gap-xl:32px;--cds-pad-xs:4px;--cds-pad-sm:8px;--cds-pad-md:16px;--cds-pad-lg:20px;--cds-pad-xl:32px;
+--cds-font-size-caption:12.5px;--cds-font-size-body:14.5px;--cds-font-size-heading:17px;--cds-font-size-title:26px;--cds-font-weight-medium:600;--cds-dur-slow:.3s;--cds-chart-grid:#EADFCB;--cds-chart-reference:#C9952B}
+body{margin:0;background:#EFE6D6;font-family:var(--font-anthropic-sans)}
+#dash-root{max-width:1180px;margin:24px auto;padding:0 16px}
+.dash-skeleton{color:transparent}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script>
+window.dash = (() => {
+  const DATA = { enquiries: [{"id": "T01", "channel": "Phone", "date": "2026-09-02", "time": "10:23", "week": "1–7 Sep", "weekday": "Tue", "after_hours": "No", "segment": "Home", "location": "Kothrud", "outcome": "Booked", "decline_reason": "", "reply_hours": "0", "answered_within_1h": "Yes", "check_real_project": "Pass", "check_service_area": "Pass", "check_timeline": "Pass", "check_budget": "Pass", "check_decision_maker": "Pass", "asked_price": "No", "price_quoted": "No", "next_step": "", "summary": "3BHK full redesign, 1,400 sq ft, done by March. Friend referral."}, {"id": "T02", "channel": "Phone", "date": "2026-09-03", "time": "14:41", "week": "1–7 Sep", "weekday": "Wed", "after_hours": "No", "segment": "Home", "location": "Wakad", "outcome": "Booked", "decline_reason": "", "reply_hours": "0", "answered_within_1h": "Yes", "check_real_project": "Pass", "check_service_area": "Pass", "check_timeline": "Pass", "check_budget": "Pass", "check_decision_maker": "Unclear", "asked_price": "Yes", "price_quoted": "No", "next_step": "", "summary": "2BHK full redesign, 950 sq ft. Pushed twice for a price range."}, {"id": "T03", "channel": "Phone", "date": "2026-09-03", "time": "16:15", "week": "1–7 Sep", "weekday": "Wed", "after_hours": "No", "segment": "Home", "location": "Nashik", "outcome": "Declined", "decline_reason": "Outside service area", "reply_hours": "0", "answered_within_1h": "Yes", "check_real_project": "Unclear", "check_service_area": "Fail", "check_timeline": "Unclear", "check_budget": "Pass", "check_decision_maker": "Unclear", "asked_price": "No", "price_quoted": "No", "next_step": "", "summary": "Home office and study in Nashik."}, {"id": "T04", "channel": "Phone", "date": "2026-09-04", "time": "11:07", "week": "1–7 Sep", "weekday": "Thu", "after_hours": "No", "segment": "Home", "location": "Not given", "outcome": "Declined", "decline_reason": "Advice only", "reply_hours": "0", "answered_within_1h": "Yes", "check_real_project": "Fail", "check_service_area": "Unclear", "check_timeline": "Unclear", "check_budget": "Pass", "check_decision_maker": "Unclear", "asked_price": "No", "price_quoted": "No", "next_step": "", "summary": "Wanted colour and furniture ideas, no execution."}, {"id": "T05", "channel": "Phone", "date": "2026-09-05", "time": "10:52", "week": "1–7 Sep", "weekday": "Fri", "after_hours": "No", "segment": "Home", "location": "Koregaon Park", "outcome": "Booked", "decline_reason": "", "reply_hours": "0", "answered_within_1h": "Yes", "check_real_project": "Pass", "check_service_area": "Pass", "check_timeline": "Pass", "check_budget": "Pass", "check_decision_maker": "Unclear", "asked_price": "No", "price_quoted": "No", "next_step": "", "summary": "4BHK, 2,400 sq ft, back in by February. Referral via Nikhil's friend."}, {"id": "T06", "channel": "Phone", "date": "2026-09-05", "time": "15:28", "week": "1–7 Sep", "weekday": "Fri", "after_hours": "No", "segment": "Office", "location": "Baner", "outcome": "Booked", "decline_reason": "", "reply_hours": "0", "answered_within_1h": "Yes", "check_real_project": "Pass", "check_service_area": "Pass", "check_timeline": "Pass", "check_budget": "Pass", "check_decision_maker": "Pass", "asked_price": "No", "price_quoted": "No", "next_step": "", "summary": "800 sq ft bare shell, 20 seats, operational by December."}, {"id": "T07", "channel": "Phone", "date": "2026-09-08", "time": "09:44", "week": "8–14 Sep", "weekday": "Mon", "after_hours": "Yes", "segment": "Home", "location": "Not given", "outcome": "Declined", "decline_reason": "Timeline too short", "reply_hours": "0", "answered_within_1h": "Yes", "check_real_project": "Pass", "check_service_area": "Unclear", "check_timeline": "Fail", "check_budget": "Pass", "check_decision_maker": "Unclear", "asked_price": "No", "price_quoted": "No", "next_step": "Wait for call back about a November start", "summary": "Living room and kitchen before Diwali (3 weeks). May call back for November."}, {"id": "T08", "channel": "Phone", "date": "2026-09-09", "time": "22:47", "week": "8–14 Sep", "weekday": "Tue", "after_hours": "Yes", "segment": "Unknown", "location": "Nanded City", "outcome": "Lost", "decline_reason": "", "reply_hours": "11.5", "answered_within_1h": "No", "check_real_project": "Unclear", "check_service_area": "Unclear", "check_timeline": "Unclear", "check_budget": "Pass", "check_decision_maker": "Unclear", "asked_price": "No", "price_quoted": "No", "next_step": "Try the number again", "summary": "Missed call, no voicemail. Call-back next morning unanswered."}, {"id": "T09", "channel": "Phone", "date": "2026-09-10", "time": "11:32", "week": "8–14 Sep", "weekday": "Wed", "after_hours": "No", "segment": "Existing client", "location": "Viman Nagar", "outcome": "Existing client", "decline_reason": "", "reply_hours": "0", "answered_within_1h": "Yes", "check_real_project": "N/A", "check_service_area": "N/A", "check_timeline": "N/A", "check_budget": "N/A", "check_decision_maker": "N/A", "asked_price": "No", "price_quoted": "No", "next_step": "", "summary": "Complaint: designer silent for 5 days. Escalated to studio head."}, {"id": "T10", "channel": "Phone", "date": "2026-09-11", "time": "14:04", "week": "8–14 Sep", "weekday": "Thu", "after_hours": "No", "segment": "Home", "location": "Kharadi", "outcome": "Declined", "decline_reason": "Budget too low", "reply_hours": "0", "answered_within_1h": "Yes", "check_real_project": "Pass", "check_service_area": "Pass", "check_timeline": "Unclear", "check_budget": "Fail", "check_decision_maker": "Unclear", "asked_price": "No", "price_quoted": "No", "next_step": "", "summary": "1BHK kitchen and bedroom on 1 to 1.5 lakh."}, {"id": "T11", "channel": "Phone", "date": "2026-09-12", "time": "10:18", "week": "8–14 Sep", "weekday": "Fri", "after_hours": "No", "segment": "Home", "location": "Baner", "outcome": "Booked", "decline_reason": "", "reply_hours": "0", "answered_within_1h": "Yes", "check_real_project": "Pass", "check_service_area": "Pass", "check_timeline": "Unclear", "check_budget": "Pass", "check_decision_maker": "Pass", "asked_price": "No", "price_quoted": "No", "next_step": "", "summary": "Rented 2BHK, landlord agrees, no structural work."}, {"id": "T12", "channel": "Phone", "date": "2026-09-15", "time": "10:05", "week": "15–21 Sep", "weekday": "Mon", "after_hours": "No", "segment": "Home", "location": "Kalyani Nagar", "outcome": "Booked", "decline_reason": "", "reply_hours": "0", "answered_within_1h": "Yes", "check_real_project": "Pass", "check_service_area": "Pass", "check_timeline": "Pass", "check_budget": "Pass", "check_decision_maker": "Unclear", "asked_price": "No", "price_quoted": "No", "next_step": "", "summary": "5,500 sq ft new villa, move in March. Wants principal designer on site."}, {"id": "T13", "channel": "Phone", "date": "2026-09-16", "time": "12:19", "week": "15–21 Sep", "weekday": "Tue", "after_hours": "No", "segment": "Home", "location": "Aundh", "outcome": "Booked", "decline_reason": "", "reply_hours": "0", "answered_within_1h": "Yes", "check_real_project": "Pass", "check_service_area": "Pass", "check_timeline": "Unclear", "check_budget": "Pass", "check_decision_maker": "Unclear", "asked_price": "Yes", "price_quoted": "No", "next_step": "", "summary": "3BHK, 1,100 sq ft. Pushed for a price range, then booked."}, {"id": "T14", "channel": "Phone", "date": "2026-09-17", "time": "11:41", "week": "15–21 Sep", "weekday": "Wed", "after_hours": "No", "segment": "Home", "location": "Hadapsar", "outcome": "Needs follow-up", "decline_reason": "", "reply_hours": "0", "answered_within_1h": "Yes", "check_real_project": "Pass", "check_service_area": "Pass", "check_timeline": "Unclear", "check_budget": "Pass", "check_decision_maker": "Unclear", "asked_price": "No", "price_quoted": "No", "next_step": "Book consultation with both parents attending", "summary": "Son calling for parents' new 3BHK. Parents decide and will attend."}, {"id": "T15", "channel": "Phone", "date": "2026-09-18", "time": "15:12", "week": "15–21 Sep", "weekday": "Thu", "after_hours": "No", "segment": "Home", "location": "Undri", "outcome": "Booked", "decline_reason": "", "reply_hours": "0", "answered_within_1h": "Yes", "check_real_project": "Pass", "check_service_area": "Pass", "check_timeline": "Pass", "check_budget": "Pass", "check_decision_maker": "Pass", "asked_price": "No", "price_quoted": "No", "next_step": "", "summary": "2BHK, 875 sq ft, possession in 6 weeks. Site visit possible now."}, {"id": "T16", "channel": "Phone", "date": "2026-09-19", "time": "10:38", "week": "15–21 Sep", "weekday": "Fri", "after_hours": "No", "segment": "Home", "location": "Viman Nagar", "outcome": "Booked", "decline_reason": "", "reply_hours": "", "answered_within_1h": "No", "check_real_project": "Pass", "check_service_area": "Pass", "check_timeline": "Unclear", "check_budget": "Pass", "check_decision_maker": "Unclear", "asked_price": "No", "price_quoted": "No", "next_step": "", "summary": "3BHK. First call on Monday was never logged. Caller upset."}, {"id": "T17", "channel": "Phone", "date": "2026-09-22", "time": "14:16", "week": "22–28 Sep", "weekday": "Mon", "after_hours": "No", "segment": "Home", "location": "Pimple Saudagar", "outcome": "Booked", "decline_reason": "", "reply_hours": "0", "answered_within_1h": "Yes", "check_real_project": "Pass", "check_service_area": "Pass", "check_timeline": "Pass", "check_budget": "Pass", "check_decision_maker": "Unclear", "asked_price": "No", "price_quoted": "No", "next_step": "", "summary": "3BHK, 1,050 sq ft, done by March. First call dropped."}, {"id": "T18", "channel": "Phone", "date": "2026-09-23", "time": "11:55", "week": "22–28 Sep", "weekday": "Tue", "after_hours": "No", "segment": "Office", "location": "Not given", "outcome": "Declined", "decline_reason": "Too small", "reply_hours": "0", "answered_within_1h": "Yes", "check_real_project": "Fail", "check_service_area": "Unclear", "check_timeline": "Unclear", "check_budget": "Pass", "check_decision_maker": "Pass", "asked_price": "No", "price_quoted": "No", "next_step": "", "summary": "180 sq ft coworking pod."}, {"id": "T19", "channel": "Phone", "date": "2026-09-24", "time": "16:02", "week": "22–28 Sep", "weekday": "Wed", "after_hours": "No", "segment": "Other", "location": "Koregaon Park", "outcome": "Declined", "decline_reason": "Out of scope (restaurant, gym)", "reply_hours": "0", "answered_within_1h": "Yes", "check_real_project": "Fail", "check_service_area": "Pass", "check_timeline": "Unclear", "check_budget": "Pass", "check_decision_maker": "Unclear", "asked_price": "No", "price_quoted": "No", "next_step": "", "summary": "Restaurant interiors."}, {"id": "T20", "channel": "Phone", "date": "2026-09-25", "time": "09:15", "week": "22–28 Sep", "weekday": "Thu", "after_hours": "Yes", "segment": "Home", "location": "Magarpatta", "outcome": "Booked", "decline_reason": "", "reply_hours": "0", "answered_within_1h": "Yes", "check_real_project": "Pass", "check_service_area": "Pass", "check_timeline": "Pass", "check_budget": "Pass", "check_decision_maker": "Pass", "asked_price": "No", "price_quoted": "No", "next_step": "", "summary": "2BHK, 900 sq ft, January execution start."}, {"id": "W01", "channel": "WhatsApp", "date": "2026-09-03", "time": "19:14", "week": "1–7 Sep", "weekday": "Wed", "after_hours": "Yes", "segment": "Home", "location": "Viman Nagar", "outcome": "Booked", "decline_reason": "", "reply_hours": "16.6", "answered_within_1h": "No", "check_real_project": "Pass", "check_service_area": "Pass", "check_timeline": "Pass", "check_budget": "Pass", "check_decision_maker": "Unclear", "asked_price": "No", "price_quoted": "No", "next_step": "", "summary": "4BHK, 1,800 sq ft. Sent a follow-up before anyone replied."}, {"id": "W02", "channel": "WhatsApp", "date": "2026-09-08", "time": "14:31", "week": "8–14 Sep", "weekday": "Mon", "after_hours": "No", "segment": "Home", "location": "Not given", "outcome": "Lost", "decline_reason": "", "reply_hours": "43.9", "answered_within_1h": "No", "check_real_project": "Unclear", "check_service_area": "Unclear", "check_timeline": "Unclear", "check_budget": "Pass", "check_decision_maker": "Unclear", "asked_price": "Yes", "price_quoted": "No", "next_step": "", "summary": "Asked per sq ft rate for a 2BHK. Reply came 2 days later; no answer."}, {"id": "W03", "channel": "WhatsApp", "date": "2026-09-12", "time": "10:45", "week": "8–14 Sep", "weekday": "Fri", "after_hours": "No", "segment": "Home", "location": "Pimple Nilakh", "outcome": "Booked", "decline_reason": "", "reply_hours": "0.3", "answered_within_1h": "Yes", "check_real_project": "Pass", "check_service_area": "Pass", "check_timeline": "Unclear", "check_budget": "Pass", "check_decision_maker": "Pass", "asked_price": "No", "price_quoted": "No", "next_step": "", "summary": "3BHK full home, in Hindi. Booked for Saturday 4 October."}, {"id": "W04", "channel": "WhatsApp", "date": "2026-09-15", "time": "15:18", "week": "15–21 Sep", "weekday": "Mon", "after_hours": "No", "segment": "Office", "location": "Chinchwad", "outcome": "Booked", "decline_reason": "", "reply_hours": "0.5", "answered_within_1h": "Yes", "check_real_project": "Pass", "check_service_area": "Pass", "check_timeline": "Pass", "check_budget": "Pass", "check_decision_maker": "Unclear", "asked_price": "No", "price_quoted": "No", "next_step": "", "summary": "1,200 sq ft bare shell, 30 seats, January. Asked for a calendar link."}, {"id": "W05", "channel": "WhatsApp", "date": "2026-09-20", "time": "18:44", "week": "15–21 Sep", "weekday": "Sat", "after_hours": "Yes", "segment": "Home", "location": "Baner", "outcome": "Lost", "decline_reason": "", "reply_hours": "39.5", "answered_within_1h": "No", "check_real_project": "Unclear", "check_service_area": "Pass", "check_timeline": "Unclear", "check_budget": "Pass", "check_decision_maker": "Unclear", "asked_price": "No", "price_quoted": "No", "next_step": "", "summary": "2BHK. Saturday evening message, reply on Monday, no answer."}, {"id": "W06", "channel": "WhatsApp", "date": "2026-09-17", "time": "11:22", "week": "15–21 Sep", "weekday": "Wed", "after_hours": "No", "segment": "Home", "location": "Koregaon Park", "outcome": "Booked", "decline_reason": "", "reply_hours": "0.3", "answered_within_1h": "Yes", "check_real_project": "Pass", "check_service_area": "Pass", "check_timeline": "Pass", "check_budget": "Pass", "check_decision_maker": "Pass", "asked_price": "No", "price_quoted": "No", "next_step": "", "summary": "New 3BHK, possession 15 October. Referral. Site visit 21 or 22 October."}, {"id": "W07", "channel": "WhatsApp", "date": "2026-09-05", "time": "16:52", "week": "1–7 Sep", "weekday": "Fri", "after_hours": "No", "segment": "Other", "location": "Kothrud", "outcome": "Declined", "decline_reason": "Out of scope (restaurant, gym)", "reply_hours": "17.6", "answered_within_1h": "No", "check_real_project": "Fail", "check_service_area": "Pass", "check_timeline": "Unclear", "check_budget": "Pass", "check_decision_maker": "Pass", "asked_price": "No", "price_quoted": "No", "next_step": "", "summary": "2,500 sq ft gym."}, {"id": "W08", "channel": "WhatsApp", "date": "2026-09-10", "time": "08:44", "week": "8–14 Sep", "weekday": "Wed", "after_hours": "Yes", "segment": "Home", "location": "Aundh", "outcome": "Booked", "decline_reason": "", "reply_hours": "", "answered_within_1h": "No", "check_real_project": "Pass", "check_service_area": "Pass", "check_timeline": "Unclear", "check_budget": "Pass", "check_decision_maker": "Unclear", "asked_price": "No", "price_quoted": "No", "next_step": "", "summary": "2BHK, 850 sq ft. Says first message went unanswered for 4 days. Escalated."}, {"id": "W09", "channel": "WhatsApp", "date": "2026-09-25", "time": "15:18", "week": "22–28 Sep", "weekday": "Thu", "after_hours": "No", "segment": "Home", "location": "Aundh", "outcome": "Needs follow-up", "decline_reason": "", "reply_hours": "19.8", "answered_within_1h": "No", "check_real_project": "Pass", "check_service_area": "Pass", "check_timeline": "Unclear", "check_budget": "Pass", "check_decision_maker": "Unclear", "asked_price": "No", "price_quoted": "No", "next_step": "Confirm the site visit date", "summary": "Living, dining, maybe kitchen in a 3BHK. Sent photos. Site visit offered."}, {"id": "W10", "channel": "WhatsApp", "date": "2026-09-22", "time": "18:12", "week": "22–28 Sep", "weekday": "Mon", "after_hours": "No", "segment": "Home", "location": "Hinjewadi", "outcome": "Early stage", "decline_reason": "", "reply_hours": "16.1", "answered_within_1h": "No", "check_real_project": "Unclear", "check_service_area": "Pass", "check_timeline": "Unclear", "check_budget": "Pass", "check_decision_maker": "Unclear", "asked_price": "No", "price_quoted": "No", "next_step": "Re-contact in 4 to 6 weeks", "summary": "3BHK, just exploring. Re-contact in 4 to 6 weeks."}, {"id": "F01", "channel": "Web form", "date": "2026-09-01", "time": "09:44", "week": "1–7 Sep", "weekday": "Mon", "after_hours": "Yes", "segment": "Home", "location": "Kalyani Nagar", "outcome": "Needs follow-up", "decline_reason": "", "reply_hours": "", "answered_within_1h": "Not recorded", "check_real_project": "Pass", "check_service_area": "Pass", "check_timeline": "Pass", "check_budget": "Pass", "check_decision_maker": "Pass", "asked_price": "No", "price_quoted": "No", "next_step": "Call to book consultation", "summary": "2BHK plus home office corner, 920 sq ft. Execution December to February."}, {"id": "F02", "channel": "Web form", "date": "2026-09-04", "time": "19:12", "week": "1–7 Sep", "weekday": "Thu", "after_hours": "Yes", "segment": "Home", "location": "Baner", "outcome": "Needs follow-up", "decline_reason": "", "reply_hours": "", "answered_within_1h": "Not recorded", "check_real_project": "Pass", "check_service_area": "Pass", "check_timeline": "Pass", "check_budget": "Pass", "check_decision_maker": "Unclear", "asked_price": "No", "price_quoted": "No", "next_step": "Call to book consultation and explain the process", "summary": "Master bedroom and living room in a 3BHK. No deadline. Referral."}, {"id": "F03", "channel": "Web form", "date": "2026-09-06", "time": "11:18", "week": "1–7 Sep", "weekday": "Sat", "after_hours": "Yes", "segment": "Home", "location": "Talegaon", "outcome": "Declined", "decline_reason": "Outside service area", "reply_hours": "", "answered_within_1h": "Not recorded", "check_real_project": "Pass", "check_service_area": "Fail", "check_timeline": "Pass", "check_budget": "Pass", "check_decision_maker": "Unclear", "asked_price": "No", "price_quoted": "No", "next_step": "", "summary": "3BHK independent house, 15 to 20 lakh."}, {"id": "F04", "channel": "Web form", "date": "2026-09-09", "time": "14:37", "week": "8–14 Sep", "weekday": "Tue", "after_hours": "No", "segment": "Unknown", "location": "Pune", "outcome": "Early stage", "decline_reason": "", "reply_hours": "", "answered_within_1h": "Not recorded", "check_real_project": "Unclear", "check_service_area": "Pass", "check_timeline": "Unclear", "check_budget": "Unclear", "check_decision_maker": "Unclear", "asked_price": "Yes", "price_quoted": "No", "next_step": "Call back as requested; ask for project details", "summary": "Wants to know cost. Asked for a call. Almost no details."}, {"id": "F05", "channel": "Web form", "date": "2026-09-11", "time": "10:05", "week": "8–14 Sep", "weekday": "Thu", "after_hours": "No", "segment": "Office", "location": "Hinjewadi", "outcome": "Needs follow-up", "decline_reason": "", "reply_hours": "", "answered_within_1h": "Not recorded", "check_real_project": "Pass", "check_service_area": "Pass", "check_timeline": "Pass", "check_budget": "Pass", "check_decision_maker": "Unclear", "asked_price": "No", "price_quoted": "No", "next_step": "Call today: wants to move fast, open by 15 Jan", "summary": "2,200 sq ft shell, 60 people, operational by 15 January. Repeat client referral."}, {"id": "F06", "channel": "Web form", "date": "2026-09-14", "time": "20:52", "week": "8–14 Sep", "weekday": "Sun", "after_hours": "Yes", "segment": "Home", "location": "NIBM Road", "outcome": "Needs follow-up", "decline_reason": "", "reply_hours": "", "answered_within_1h": "Not recorded", "check_real_project": "Pass", "check_service_area": "Pass", "check_timeline": "Pass", "check_budget": "Pass", "check_decision_maker": "Unclear", "asked_price": "No", "price_quoted": "No", "next_step": "Book consultation; include an honest talk on style fit", "summary": "4BHK, 1,950 sq ft, execution from February 2027. Comparing 3 studios."}, {"id": "F07", "channel": "Web form", "date": "2026-09-16", "time": "15:11", "week": "15–21 Sep", "weekday": "Tue", "after_hours": "No", "segment": "Unknown", "location": "Pune", "outcome": "Early stage", "decline_reason": "", "reply_hours": "", "answered_within_1h": "Not recorded", "check_real_project": "Unclear", "check_service_area": "Pass", "check_timeline": "Unclear", "check_budget": "Pass", "check_decision_maker": "Unclear", "asked_price": "Yes", "price_quoted": "No", "next_step": "Reply with the standard pricing answer; ask for project details", "summary": "Only wants a price list by email. No other details."}, {"id": "F08", "channel": "Web form", "date": "2026-09-18", "time": "18:44", "week": "15–21 Sep", "weekday": "Thu", "after_hours": "No", "segment": "Home", "location": "Wakad", "outcome": "Declined", "decline_reason": "Timeline too short", "reply_hours": "", "answered_within_1h": "Not recorded", "check_real_project": "Pass", "check_service_area": "Pass", "check_timeline": "Fail", "check_budget": "Pass", "check_decision_maker": "Unclear", "asked_price": "No", "price_quoted": "No", "next_step": "", "summary": "Living room and kitchen in 3 weeks before guests arrive."}, {"id": "F09", "channel": "Web form", "date": "2026-09-20", "time": "11:30", "week": "15–21 Sep", "weekday": "Sat", "after_hours": "Yes", "segment": "Home", "location": "Kondhwa", "outcome": "Needs follow-up", "decline_reason": "", "reply_hours": "", "answered_within_1h": "Not recorded", "check_real_project": "Pass", "check_service_area": "Pass", "check_timeline": "Pass", "check_budget": "Pass", "check_decision_maker": "Unclear", "asked_price": "No", "price_quoted": "No", "next_step": "Call to book consultation", "summary": "New 3BHK, 1,150 sq ft, move in March 2027. Builder referral."}, {"id": "F10", "channel": "Web form", "date": "2026-09-26", "time": "16:22", "week": "22–28 Sep", "weekday": "Fri", "after_hours": "No", "segment": "Home", "location": "Aundh", "outcome": "Needs follow-up", "decline_reason": "", "reply_hours": "", "answered_within_1h": "Not recorded", "check_real_project": "Pass", "check_service_area": "Pass", "check_timeline": "Pass", "check_budget": "Pass", "check_decision_maker": "Pass", "asked_price": "No", "price_quoted": "No", "next_step": "Book consultation; plan a collaborative process", "summary": "3BHK with two home offices, 1,300 sq ft. Wants a collaborative process."}], guide: [{"order": "1", "section": "Services", "item": "Space planning and layout", "detail": "Making the best use of every room."}, {"order": "2", "section": "Services", "item": "Material selection", "detail": "Flooring, wall finishes and ceilings."}, {"order": "3", "section": "Services", "item": "Furniture design and curation", "detail": "Custom-made and sourced pieces."}, {"order": "4", "section": "Services", "item": "Lighting design", "detail": "Planning and specifying the lighting."}, {"order": "5", "section": "Services", "item": "Kitchen and wardrobe design", "detail": ""}, {"order": "6", "section": "Services", "item": "Execution supervision", "detail": "Done with the studio's own network of contractors and vendors."}, {"order": "7", "section": "Project types", "item": "Residential", "detail": "Apartments, independent houses and villas: full home, specific floors, or single rooms, always a complete redesign with execution."}, {"order": "8", "section": "Project types", "item": "Commercial", "detail": "Offices, clinics and studios up to about 3,000 sq ft. No retail or hospitality (restaurants, hotels) as main projects."}, {"order": "9", "section": "What we don't do", "item": "Architecture and structural work", "detail": "No moving walls, changing the building structure, or permits for structural changes."}, {"order": "10", "section": "What we don't do", "item": "Decor and styling only", "detail": "No colour advice or furniture rearranging. The minimum is a room redesign with execution."}, {"order": "11", "section": "What we don't do", "item": "Standalone furniture sourcing", "detail": "Furniture is only sourced as part of a design project."}, {"order": "12", "section": "What we don't do", "item": "Vastu consultation only", "detail": "Vastu is built into designs, but not offered as separate advice."}, {"order": "13", "section": "What we don't do", "item": "Restaurants, hotels, retail stores, gyms", "detail": "Out of scope."}, {"order": "14", "section": "What we don't do", "item": "Projects outside the service area", "detail": "Only Pune city and PCMC."}, {"order": "15", "section": "Service area", "item": "Pune city", "detail": "Kothrud, Baner, Aundh, Wakad, Koregaon Park, Kalyani Nagar, Viman Nagar, Hadapsar, Magarpatta, NIBM, Kondhwa, Undri, Shivane, Warje, Erandwane, Deccan and nearby areas."}, {"order": "16", "section": "Service area", "item": "PCMC", "detail": "Pimpri, Chinchwad, Pimple Saudagar, Pimple Nilakh, Ravet, Hinjewadi."}, {"order": "17", "section": "Service area", "item": "Not served", "detail": "Talegaon, Lonavala, Nashik, Mumbai and other cities."}, {"order": "18", "section": "Typical scope", "item": "Full home", "detail": "2BHK onwards. End-to-end design and execution."}, {"order": "19", "section": "Typical scope", "item": "Partial home", "detail": "A full floor, or 2 or more rooms, with execution."}, {"order": "20", "section": "Typical scope", "item": "Office", "detail": "Up to about 3,000 sq ft: workstations, cabins, reception and common areas."}, {"order": "21", "section": "Typical scope", "item": "Single room", "detail": "Bedroom or living room: complete redesign with all materials, furniture and execution. Not just advice."}, {"order": "22", "section": "Timelines", "item": "Design phase", "detail": "3–4 weeks from the first consultation."}, {"order": "23", "section": "Timelines", "item": "Execution", "detail": "8–16 weeks, depending on project size and how ready the site is."}, {"order": "24", "section": "Timelines", "item": "Minimum lead time", "detail": "Execution can't start on a project that must be ready in under 6 weeks from today."}] };
+  const DEFAULTS = { channel: 'All', enq_target: 47, handoff_target: null };
+  const calcs = {}, subs = [];
+  let params = { ...DEFAULTS }, cache = {};
+  const compute = id => {
+    if (id in DATA) return DATA[id];
+    if (id in cache) return cache[id];
+    const c = calcs[id]; if (!c) return undefined;
+    return (cache[id] = c.fn(...c.inputs.map(compute)));
+  };
+  const run = () => subs.forEach(f => f());
+  let t; window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(run, 150); });
+  return {
+    colors: ['#1E5B5A', '#C9952B', '#BDB29B', '#2F3B6B', '#B5532C', '#8A2F2F', '#6F7F5A', '#7A5C8F'],
+    data(id) { const d = compute(id); return d === undefined ? { status: 'missing', data: [], columns: [] } : { status: 'ok', data: d, columns: d[0] ? Object.keys(d[0]) : [], meta: [] }; },
+    calc(id, spec) { calcs[id] = spec; },
+    loader() {},
+    onData(fn) { subs.push(fn); fn(); },
+    params() { return { ...params }; },
+    setParams(p) { params = { ...params, ...p }; run(); },
+    resetParams() { params = { ...DEFAULTS }; run(); },
+    setLink(id) { try { history.replaceState(null, '', '#' + id); } catch (e) {} },
+    refresh() {}
+  };
+})();
+</script>
+</head><body><div id="dash-root">
+<style>
+#ag{--ag-bg:#FBF6EE;--ag-panel:#FFFDF8;--ag-sand:#F2E7D5;--ag-line:#E4D5BD;--ag-ink:#2A1F17;--ag-muted:#76634F;--ag-terra:#B5532C;--ag-teal:#1E5B5A;--ag-haldi:#C9952B;--ag-indigo:#2F3B6B;--ag-maroon:#8A2F2F;
+  font-family:var(--font-anthropic-sans);color:var(--ag-ink);background:var(--ag-bg);border:1px solid var(--ag-line);border-radius:14px;overflow:hidden;
+  --color-fg:var(--ag-ink);--color-fg-muted:var(--ag-muted);--color-panel:var(--ag-panel);--color-border-line:var(--ag-line);--color-bg:var(--ag-panel);--color-ok:#2F6B3A;--color-bad:var(--ag-maroon);--color-warn:#9A6A12}
+#ag *{box-sizing:border-box}
+#ag .ag-band{position:relative;padding:var(--cds-pad-xl) var(--cds-pad-xl) var(--cds-pad-lg);background-color:var(--ag-sand);
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><g fill='none' stroke='%23C9952B' stroke-opacity='.32' stroke-width='1'><circle cx='16' cy='16' r='8'/><circle cx='0' cy='0' r='8'/><circle cx='32' cy='0' r='8'/><circle cx='0' cy='32' r='8'/><circle cx='32' cy='32' r='8'/><circle cx='16' cy='16' r='2'/></g></svg>")}
+#ag .ag-toran{height:10px;background:
+  linear-gradient(135deg,var(--ag-terra) 25%,transparent 25%) -5px 0/10px 10px,
+  linear-gradient(225deg,var(--ag-terra) 25%,transparent 25%) -5px 0/10px 10px,var(--ag-haldi)}
+#ag .ag-brand{font-size:var(--cds-font-size-caption);letter-spacing:.18em;text-transform:uppercase;color:var(--ag-terra);font-weight:var(--cds-font-weight-medium)}
+#ag .ag-brand span{letter-spacing:0;text-transform:none;font-size:var(--cds-font-size-body);margin-left:6px;color:var(--ag-maroon)}
+#ag .ag-h1{font-family:var(--font-anthropic-serif);font-weight:400;font-size:calc(var(--cds-font-size-title) * 1.25);margin:var(--cds-gap-xs) 0 0;color:var(--ag-ink)}
+#ag .ag-take{color:var(--ag-muted);margin:var(--cds-gap-sm) 0 0;max-width:46rem}
+#ag .ag-take b{color:var(--ag-ink);font-weight:var(--cds-font-weight-medium)}
+#ag .ag-nav{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--cds-gap-md);padding:var(--cds-pad-md) var(--cds-pad-xl);border-bottom:1px solid var(--ag-line);background:var(--ag-panel)}
+#ag .ag-tabs,#ag .ag-seg{display:inline-flex;flex-wrap:wrap;gap:4px}
+#ag .ag-tabs button,#ag .ag-seg button{all:unset;cursor:pointer;padding:6px 14px;border-radius:999px;font-size:var(--cds-font-size-caption);color:var(--ag-muted);border:1px solid transparent}
+#ag .ag-tabs button[aria-selected=true]{background:var(--ag-teal);color:#FBF6EE}
+#ag .ag-seg button{border-color:var(--ag-line)}
+#ag .ag-seg button[aria-pressed=true]{background:var(--ag-terra);border-color:var(--ag-terra);color:#FBF6EE}
+#ag .ag-tabs button:focus-visible,#ag .ag-seg button:focus-visible{outline:2px solid var(--ag-haldi)}
+#ag .ag-body{padding:var(--cds-pad-xl);display:flex;flex-direction:column;gap:var(--cds-gap-lg)}
+#ag .ag-page{display:flex;flex-direction:column;gap:var(--cds-gap-lg)}
+#ag .ag-page[hidden]{display:none}
+#ag .ag-sec{font-family:var(--font-anthropic-serif);font-weight:400;font-size:var(--cds-font-size-title);margin:var(--cds-gap-sm) 0 0;display:flex;align-items:center;gap:10px}
+#ag .ag-sec::before{content:"";width:9px;height:9px;background:var(--ag-haldi);transform:rotate(45deg);flex:none}
+#ag .ag-sec::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--ag-line),transparent)}
+#ag .ag-lead{color:var(--ag-muted);margin:-6px 0 0;font-size:var(--cds-font-size-body);max-width:52rem}
+#ag .ag-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,10.5rem),1fr));gap:var(--cds-gap-md)}
+#ag .ag-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,22rem),1fr));gap:var(--cds-gap-md)}
+#ag .ag-grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,16rem),1fr));gap:var(--cds-gap-md)}
+#ag .ag-card{background:var(--ag-panel);border:1px solid var(--ag-line);border-top:3px solid var(--ag-haldi);border-radius:10px;padding:var(--cds-pad-lg);min-width:0;box-shadow:0 1px 0 rgba(42,31,23,.04)}
+#ag .ag-kl{font-size:var(--cds-font-size-caption);color:var(--ag-muted);letter-spacing:.04em}
+#ag .ag-kv{font-family:var(--font-anthropic-serif);font-weight:400;font-size:calc(var(--cds-font-size-title) * 1.15);font-variant-numeric:tabular-nums;margin-top:var(--cds-gap-xs);line-height:1.15;min-height:1.15em}
+#ag .ag-kn{font-size:var(--cds-font-size-caption);color:var(--ag-muted);margin-top:var(--cds-gap-xs)}
+#ag .ag-bad{color:var(--ag-maroon)} #ag .ag-ok{color:#2F6B3A}
+#ag .ag-t{font-family:var(--font-anthropic-serif);font-size:var(--cds-font-size-heading);font-weight:400;margin:0}
+#ag .ag-n{font-size:var(--cds-font-size-caption);color:var(--ag-muted);margin:var(--cds-gap-xs) 0 var(--cds-gap-md)}
+#ag .ag-chart{position:relative;min-height:160px}
+#ag .ag-chart svg text{font-size:var(--cds-font-size-caption);fill:var(--ag-muted);font-variant-numeric:tabular-nums}
+#ag .ag-chart svg text.ag-strong{fill:var(--ag-ink)}
+#ag .ag-chart svg line{stroke:#EADFCB}
+#ag .ag-legend{display:flex;flex-wrap:wrap;gap:var(--cds-gap-sm) var(--cds-gap-md);font-size:var(--cds-font-size-caption);color:var(--ag-muted);margin-bottom:var(--cds-gap-sm)}
+#ag .ag-legend span{display:inline-flex;align-items:center;gap:6px}
+#ag .ag-sw{display:inline-block;width:10px;height:10px;border-radius:2px;flex:none;transform:rotate(45deg) scale(.85)}
+#ag .ag-tip{position:absolute;display:none;z-index:5;background:var(--ag-panel);border:1px solid var(--ag-line);border-radius:8px;box-shadow:0 6px 18px rgba(42,31,23,.12);padding:6px 10px;font-size:var(--cds-font-size-caption);pointer-events:none;white-space:nowrap;color:var(--ag-ink)}
+#ag .ag-tip-h{color:var(--ag-muted);margin-bottom:2px}
+#ag .ag-tip-r{display:flex;align-items:center;gap:6px}
+#ag .ag-tip-r b{margin-left:auto;padding-left:12px;font-variant-numeric:tabular-nums}
+#ag .ag-fail{display:flex;align-items:center;justify-content:center;gap:6px;min-height:inherit;color:var(--ag-muted);font-size:var(--cds-font-size-caption)}
+#ag .ag-fail::before{content:"";width:.375rem;height:.375rem;border-radius:50%;background:var(--ag-maroon)}
+#ag table{width:100%;border-collapse:collapse;font-size:var(--cds-font-size-caption);font-variant-numeric:tabular-nums}
+#ag th,#ag td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--ag-line);vertical-align:top}
+#ag th{position:sticky;top:0;background:var(--ag-panel);font-weight:var(--cds-font-weight-medium);color:var(--ag-muted)}
+#ag tbody tr:nth-child(even) td{background:rgba(242,231,213,.35)}
+#ag th button{all:unset;cursor:pointer}
+#ag th[aria-sort=ascending] button::after{content:" ↑"}
+#ag th[aria-sort=descending] button::after{content:" ↓"}
+#ag .ag-scroll{max-height:30rem;overflow:auto}
+#ag .ag-hscroll{overflow-x:auto}
+#ag .ag-search,#ag .ag-num{box-sizing:border-box;padding:6px 10px;border:1px solid var(--ag-line);border-radius:8px;background:var(--ag-bg);color:var(--ag-ink);font:inherit;font-size:var(--cds-font-size-caption)}
+#ag .ag-search{width:100%;max-width:22rem;margin-bottom:var(--cds-gap-sm)}
+#ag .ag-num{width:6.5rem;font-variant-numeric:tabular-nums}
+#ag .ag-pill{display:inline-flex;align-items:center;padding:1px 9px;border-radius:999px;border:1px solid var(--ag-line);white-space:nowrap;background:var(--ag-panel)}
+#ag .ag-sum{min-width:16rem}
+#ag .ag-pass{color:#2F6B3A} #ag .ag-failc{color:var(--ag-maroon)} #ag .ag-unc{color:#9A6A12}
+#ag .ag-targets{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,14rem),1fr));gap:var(--cds-gap-md);align-items:start}
+#ag .ag-field label{display:block;font-size:var(--cds-font-size-caption);color:var(--ag-muted);margin-bottom:4px}
+#ag .ag-row{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+#ag .ag-linkbtn{all:unset;cursor:pointer;font-size:var(--cds-font-size-caption);color:var(--ag-terra);text-decoration:underline}
+#ag .ag-chk{display:flex;gap:12px}
+#ag .ag-chk-n{font-family:var(--font-anthropic-serif);font-size:var(--cds-font-size-title);color:var(--ag-haldi);line-height:1;min-width:2.2rem}
+#ag .ag-chk h4{margin:0;font-size:var(--cds-font-size-body);font-weight:var(--cds-font-weight-medium)}
+#ag .ag-chk p{margin:4px 0 0;font-size:var(--cds-font-size-caption);color:var(--ag-muted);line-height:1.5}
+#ag .ag-yes{display:inline-block;margin-top:6px;padding:1px 9px;border-radius:999px;background:var(--ag-teal);color:#FBF6EE;font-size:var(--cds-font-size-caption)}
+#ag .ag-grp{font-size:var(--cds-font-size-caption);letter-spacing:.12em;text-transform:uppercase;color:var(--ag-terra);font-weight:var(--cds-font-weight-medium);margin-bottom:var(--cds-gap-sm)}
+#ag .ag-grp small{display:block;letter-spacing:0;text-transform:none;color:var(--ag-muted);font-weight:400;margin-top:2px}
+#ag .ag-flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,11rem),1fr));gap:var(--cds-gap-md);counter-reset:step}
+#ag .ag-step{position:relative;background:var(--ag-panel);border:1px solid var(--ag-line);border-radius:10px;padding:var(--cds-pad-md);counter-increment:step}
+#ag .ag-step::before{content:counter(step);position:absolute;top:-11px;left:12px;width:22px;height:22px;border-radius:50%;background:var(--ag-terra);color:#FBF6EE;font-size:12px;display:flex;align-items:center;justify-content:center}
+#ag .ag-step h4{margin:6px 0 6px;font-size:var(--cds-font-size-body);font-weight:var(--cds-font-weight-medium)}
+#ag .ag-tool{display:block;font-size:var(--cds-font-size-caption);color:var(--ag-muted);line-height:1.45;margin-top:6px}
+#ag .ag-tool b{color:var(--ag-teal);font-weight:var(--cds-font-weight-medium)}
+#ag .ag-note{font-size:var(--cds-font-size-caption);color:var(--ag-muted);background:var(--ag-sand);border-left:3px solid var(--ag-haldi);padding:10px 12px;border-radius:6px}
+#ag .ag-foot{text-align:center;font-size:var(--cds-font-size-caption);color:var(--ag-muted);padding:var(--cds-pad-md);border-top:1px solid var(--ag-line)}
+@media (max-width:640px){#ag .ag-hide-narrow{display:none} #ag .ag-band,#ag .ag-body,#ag .ag-nav{padding-left:var(--cds-pad-md);padding-right:var(--cds-pad-md)}}
+#ag .ag-warn{font-size:var(--cds-font-size-body);color:var(--ag-maroon);background:#F7E6E0;border:1px solid #E7C3B7;border-left:4px solid var(--ag-maroon);padding:12px 14px;border-radius:8px;font-weight:var(--cds-font-weight-medium)}
+#ag .ag-gl{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+#ag .ag-gl li{display:flex;flex-direction:column;gap:2px;padding-bottom:10px;border-bottom:1px dashed var(--ag-line)}
+#ag .ag-gl li:last-child{border-bottom:0;padding-bottom:0}
+#ag .ag-gl b{font-weight:var(--cds-font-weight-medium);color:var(--ag-ink)}
+#ag .ag-gl span{font-size:var(--cds-font-size-caption);color:var(--ag-muted);line-height:1.5}
+#ag .ag-gl.ag-price li{flex-direction:row;justify-content:space-between;align-items:baseline;gap:12px}
+#ag .ag-gl.ag-price span{font-size:var(--cds-font-size-body);color:var(--ag-teal);font-weight:var(--cds-font-weight-medium);text-align:right;font-variant-numeric:tabular-nums}
+#ag .ag-gl.ag-no b::before{content:"✕ ";color:var(--ag-maroon)}
+#ag .ag-gl.ag-never b{color:var(--ag-maroon)}
+#ag .ag-gl.ag-never b::before{content:"✕ "}
+#ag .ag-quote{margin:0;font-family:var(--font-anthropic-serif);font-size:var(--cds-font-size-heading);line-height:1.5;color:var(--ag-teal);border-left:3px solid var(--ag-haldi);padding-left:14px}
+#ag .ag-card.ag-wide{grid-column:1/-1}
+#ag [data-dash-source-state=empty]{color:transparent}
+#ag [data-dash-source-state=refreshing]{opacity:.5;transition:opacity var(--cds-dur-slow)}
+</style>
+
+<div id="ag">
+  <div class="ag-toran"></div>
+  <header class="ag-band">
+    <div class="ag-brand">Aangan Studio <span>आँगन</span></div>
+    <h1 class="ag-h1" id="title">Enquiries, September 2026</h1>
+    <p class="ag-take" id="takeaway">
+      <b data-source="kpis" data-field="booked" class="dash-skeleton">—</b> of <b data-source="kpis" data-field="new_enquiries">—</b> enquiries booked.
+      <span id="tk-reply"><b data-source="kpis" data-field="within_1h">—</b> of <b data-source="kpis" data-field="reply_known">—</b> answered within 1 hour (target: all).</span>
+      <span id="tk-noreply" hidden>No reply times are recorded for web forms.</span>
+      <b data-source="kpis" data-field="follow_up">—</b> good leads still need a follow-up.
+    </p>
+  </header>
+
+  <nav class="ag-nav">
+    <div class="ag-tabs" id="ag-tabs" role="tablist" aria-label="Pages">
+      <button data-tab="overview" role="tab">Overview</button>
+      <button data-tab="ninechecks" role="tab">Nine checks</button>
+      <button data-tab="services" role="tab">Services</button>
+      <button data-tab="stack" role="tab">The stack</button>
+    </div>
+    <div class="ag-seg" id="ag-filter" role="group" aria-label="Channel">
+      <button data-ch="All">All channels</button>
+      <button data-ch="Phone">Incoming calls</button>
+      <button data-ch="WhatsApp">WhatsApp</button>
+      <button data-ch="Web form">Web form</button>
+    </div>
+  </nav>
+
+  <div class="ag-body">
+  <!-- OVERVIEW -->
+  <section class="ag-page" id="overview">
+    <div class="ag-kpis" id="kpis">
+      <div class="ag-card"><div class="ag-kl">New enquiries</div><div class="ag-kv dash-skeleton" data-source="kpis" data-field="new_enquiries">—</div><div class="ag-kn">Existing-client complaint left out.</div></div>
+      <div class="ag-card"><div class="ag-kl">Answered within 1 hour</div><div class="ag-kv dash-skeleton" id="kv-1h" data-source="kpis" data-field="within_1h_share" data-fmt="pct">—</div><div class="ag-kn">Target 100%. <span data-source="kpis" data-field="not_recorded">—</span> with no reply time.</div></div>
+      <div class="ag-card"><div class="ag-kl">Passed to designers</div><div class="ag-kv dash-skeleton" data-source="kpis" data-field="passed">—</div><div class="ag-kn">Booked, or fits the rules and waiting.</div></div>
+      <div class="ag-card"><div class="ag-kl">Booked</div><div class="ag-kv dash-skeleton" data-source="kpis" data-field="booked">—</div><div class="ag-kn">Consultation or site visit set.</div></div>
+      <div class="ag-card"><div class="ag-kl">Lost</div><div class="ag-kv ag-bad dash-skeleton" data-source="kpis" data-field="lost">—</div><div class="ag-kn">Missed or late reply, then silence.</div></div>
+      <div class="ag-card"><div class="ag-kl">Asked about price</div><div class="ag-kv dash-skeleton" data-source="kpis" data-field="asked_price">—</div><div class="ag-kn">Prices quoted: <span data-source="kpis" data-field="price_quoted">—</span>. Rule: never quote.</div></div>
+    </div>
+
+    <h2 class="ag-sec" id="targets">Weekly targets</h2>
+    <div class="ag-card">
+      <div class="ag-targets">
+        <div class="ag-field">
+          <label for="t-enq">Enquiries per week (target)</label>
+          <input class="ag-num" id="t-enq" type="number" min="1" step="1" inputmode="numeric">
+          <div class="ag-kn">Starts at 200 a month from your class notes, about 47 a week. Change it here.</div>
+        </div>
+        <div>
+          <div class="ag-kl">Average enquiries per week</div>
+          <div class="ag-kv dash-skeleton" data-source="week_avg" data-field="avg_enquiries">—</div>
+          <div class="ag-kn" id="st-enq"></div>
+        </div>
+        <div class="ag-field">
+          <label for="t-hand">Hand-offs to designers per week (target)</label>
+          <input class="ag-num" id="t-hand" type="number" min="1" step="1" inputmode="numeric" placeholder="Set a number">
+          <div class="ag-kn">Not given in the documents. Type your number.</div>
+        </div>
+        <div>
+          <div class="ag-kl">Average hand-offs per week</div>
+          <div class="ag-kv dash-skeleton" data-source="week_avg" data-field="avg_passed">—</div>
+          <div class="ag-kn" id="st-hand"></div>
+        </div>
+      </div>
+      <div class="ag-row" style="margin-top:var(--cds-gap-md)"><button class="ag-linkbtn" id="t-reset">Reset targets and filter</button></div>
+    </div>
+
+    <div class="ag-grid">
+      <div class="ag-card" id="card-weekly">
+        <h3 class="ag-t">Enquiries per week</h3>
+        <p class="ag-n">New enquiries and hand-offs to designers, with your targets as dashed lines. The log holds far fewer enquiries than 200 a month, so it may be a sample.</p>
+        <div class="ag-legend" id="lg-weekly"></div>
+        <div class="ag-chart dash-skeleton" id="ag-week" data-source="weekly" style="min-height:240px"></div>
+      </div>
+      <div class="ag-card" id="card-reply">
+        <h3 class="ag-t">Answered within 1 hour</h3>
+        <p class="ag-n">Calls count when picked up live. Target: every enquiry.</p>
+        <div class="ag-legend" id="lg-reply"></div>
+        <div class="ag-chart dash-skeleton" id="ag-reply" data-source="reply"></div>
+      </div>
+    </div>
+
+    <div class="ag-grid">
+      <div class="ag-card" id="card-checks">
+        <h3 class="ag-t">The five checks</h3>
+        <p class="ag-n">Nikhil's rules. Unclear on budget or decision-maker still passes; note it for the designer.</p>
+        <div class="ag-hscroll">
+          <table id="ag-checks" data-source="checks" data-row-key="channel,check">
+            <thead><tr><th data-field="check">Check</th><th data-field="pass">Pass</th><th data-field="fail">Fail</th><th data-field="unclear">Unclear</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="ag-card" id="card-declines">
+        <h3 class="ag-t">Why enquiries were turned away</h3>
+        <p class="ag-n">Declined enquiries by reason.</p>
+        <div class="ag-chart dash-skeleton" id="ag-dec" data-source="declines"></div>
+      </div>
+    </div>
+
+    <div class="ag-card" id="card-actions">
+      <h3 class="ag-t">Needs action</h3>
+      <p class="ag-n">Good leads with no booking yet, and leads to re-contact.</p>
+      <div class="ag-hscroll">
+        <table id="ag-actions" data-source="enquiries" data-row-key="id">
+          <thead><tr><th data-field="id">ID</th><th data-field="channel">Channel</th><th data-field="location">Area</th><th data-field="outcome">Status</th><th data-field="next_step">Next step</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="ag-card" id="card-all">
+      <h3 class="ag-t">Every enquiry</h3>
+      <input class="ag-search" id="ag-q" type="search" placeholder="Search by area, outcome or details" aria-label="Search enquiries">
+      <div class="ag-scroll">
+        <table id="ag-table" data-source="enquiries" data-row-key="id">
+          <thead><tr>
+            <th data-field="id"><button data-k="id">ID</button></th>
+            <th data-field="channel"><button data-k="channel">Channel</button></th>
+            <th data-field="date"><button data-k="date">Date</button></th>
+            <th data-field="location"><button data-k="location">Area</button></th>
+            <th data-field="outcome"><button data-k="outcome">Outcome</button></th>
+            <th data-field="answered_within_1h"><button data-k="answered_within_1h">Within 1 hour</button></th>
+            <th data-field="summary" class="ag-hide-narrow">Details</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- NINE CHECKS -->
+  <section class="ag-page" id="ninechecks" hidden>
+    <h2 class="ag-sec">The nine checks</h2>
+    <p class="ag-lead">Should Aangan build this system? Each check must be a yes. A no on the first three means don't build it. A no in the middle means build something smaller. A no in the last group means a person must handle that step.</p>
+    <div class="ag-grid3">
+      <div>
+        <div class="ag-grp">Must pass<small>Any no: don't build it</small></div>
+        <div class="ag-grid3" style="grid-template-columns:1fr">
+          <div class="ag-card ag-chk"><div class="ag-chk-n">01</div><div><h4>Is the problem real?</h4><p>Two front-desk staff miss evening and weekend messages. In September, <span class="ag-fixed" data-source="kpis" data-where="channel=All" data-field="lost">—</span> enquiries were lost and only <span class="ag-fixed" data-source="kpis" data-where="channel=All" data-field="within_1h_share" data-fmt="pct">—</span> of replies with a recorded time came within an hour.</p><span class="ag-yes">Yes</span></div></div>
+          <div class="ag-card ag-chk"><div class="ag-chk-n">02</div><div><h4>Is the work repeated?</h4><p>Every enquiry goes through the same five checks: real project, service area, timeline, budget and decision-maker.</p><span class="ag-yes">Yes</span></div></div>
+          <div class="ag-card ag-chk"><div class="ag-chk-n">03</div><div><h4>Is the input available?</h4><p>The studio has a pricing guide, the qualification rules, a services list and a month of enquiry transcripts.</p><span class="ag-yes">Yes</span></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="ag-grp">Size<small>Any no: build something smaller</small></div>
+        <div class="ag-grid3" style="grid-template-columns:1fr">
+          <div class="ag-card ag-chk"><div class="ag-chk-n">04</div><div><h4>Is the output useful?</h4><p>Designers get a ready summary. The front desk sees who needs a call next.</p><span class="ag-yes">Yes</span></div></div>
+          <div class="ag-card ag-chk"><div class="ag-chk-n">05</div><div><h4>Can we measure the impact?</h4><p>Share answered within 1 hour against a 100% target, and enquiries and hand-offs per week against the weekly targets.</p><span class="ag-yes">Yes</span></div></div>
+          <div class="ag-card ag-chk"><div class="ag-chk-n">08</div><div><h4>Is it worth the cost?</h4><p>The class slide lists free options for booking and the CRM. Winning one project that would have been lost likely covers the rest.</p><span class="ag-yes">Yes</span></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="ag-grp">People<small>Any no: put a person here</small></div>
+        <div class="ag-grid3" style="grid-template-columns:1fr">
+          <div class="ag-card ag-chk"><div class="ag-chk-n">06</div><div><h4>Is the risk of mistakes acceptable?</h4><p>If the system is unsure, the enquiry goes to the front desk for a callback between 10am and 7pm.</p><span class="ag-yes">Yes</span></div></div>
+          <div class="ag-card ag-chk"><div class="ag-chk-n">07</div><div><h4>Is human judgment protected?</h4><p>Nothing decides design or price. Prices are never quoted. Designers decide fit at the consultation.</p><span class="ag-yes">Yes</span></div></div>
+          <div class="ag-card ag-chk"><div class="ag-chk-n">09</div><div><h4>Is it clear who owns what?</h4><p>Front desk: calls and callbacks. Designers: consultations and pricing. Nikhil: the rules. The system: first reply, checks and hand-off.</p><span class="ag-yes">Yes</span></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="ag-page" id="services" hidden>
+    <h2 class="ag-sec">Services</h2>
+    <p class="ag-lead">End-to-end interior design for homes and small commercial spaces across Pune and PCMC: what the studio offers, what it doesn't, where it works and how long projects take.</p>
+    <div class="ag-grid dash-skeleton" id="sv-main" data-source="guide" style="min-height:200px"></div>
+  </section>
+
+  <!-- STACK -->
+  <section class="ag-page" id="stack" hidden>
+    <h2 class="ag-sec">How the stack fits together</h2>
+    <p class="ag-lead">The tools from the class slide, placed on the path an enquiry takes.</p>
+    <div class="ag-flow">
+      <div class="ag-step"><h4>Enquiry comes in</h4><span class="ag-tool"><b>Vaani Labs</b> answers the phone: voice, phone line and call flow in one place.</span></div>
+      <div class="ag-step"><h4>Sort and check</h4><span class="ag-tool"><b>Gemini Flash</b> sorts and routes each call.</span><span class="ag-tool"><b>Claude Chat</b> is where the five-check rules are written first.</span></div>
+      <div class="ag-step"><h4>Book consultation</h4><span class="ag-tool"><b>Cal.com, Calendly or Google Calendar</b> books the consultation during the call.</span></div>
+      <div class="ag-step"><h4>Keep a record</h4><span class="ag-tool"><b>Supabase or Neon</b> stores the call log and status.</span><span class="ag-tool"><b>HubSpot</b> turns good leads into deals.</span></div>
+      <div class="ag-step"><h4>Hand off to designer</h4><span class="ag-tool"><b>Telegram or Resend</b> sends the designer the summary.</span></div>
+      <div class="ag-step"><h4>Track</h4><span class="ag-tool"><b>This dashboard</b>, which can be hosted on <b>Vercel</b>.</span></div>
+    </div>
+    <div class="ag-card">
+      <h3 class="ag-t">Building it</h3>
+      <p class="ag-n" style="margin-bottom:0"><b>Claude Code</b> is where the project is built from start to finish. <b>GitHub</b> saves progress after every session.</p>
+    </div>
+    <div class="ag-note">This public copy shows a fixed snapshot of the September 2026 enquiry log. The studio's own version reads the Neon enquiries table live.</div>
+  </section>
+  </div>
+  <div class="ag-foot">Aangan Studio · Pune &amp; PCMC · Enquiry log, September 2026</div>
+</div>
+
+<script>
+
+const ORDER = ['Booked', 'Needs follow-up', 'Early stage', 'Declined', 'Lost'];
+const CH_LABEL = { All: 'All channels', Phone: 'Incoming calls', WhatsApp: 'WhatsApp', 'Web form': 'Web form' };
+
+dash.calc('kpis', {
+  inputs: ['enquiries'],
+  title: 'Headline counts',
+  description: 'Per channel and for all: enquiries, 1-hour replies, outcomes and price questions. Existing-client complaint left out.',
+  fn: (enquiries) => ['All', 'Phone', 'WhatsApp', 'Web form'].map(channel => {
+    const n = enquiries.filter(r => r.outcome !== 'Existing client' && (channel === 'All' || r.channel === channel));
+    const known = n.filter(r => r.answered_within_1h !== 'Not recorded');
+    const fast = known.filter(r => r.answered_within_1h === 'Yes').length;
+    const count = o => n.filter(r => r.outcome === o).length;
+    return {
+      channel, new_enquiries: n.length, reply_known: known.length, within_1h: fast,
+      within_1h_share: known.length ? fast / known.length : null, not_recorded: n.length - known.length,
+      passed: count('Booked') + count('Needs follow-up'), booked: count('Booked'), follow_up: count('Needs follow-up'),
+      lost: count('Lost'), declined: count('Declined'),
+      asked_price: n.filter(r => r.asked_price === 'Yes').length, price_quoted: n.filter(r => r.price_quoted === 'Yes').length
+    };
+  })
+});
+
+dash.calc('weekly', {
+  inputs: ['enquiries'],
+  title: 'Enquiries per week',
+  description: 'New enquiries and leads passed to designers (booked or waiting for follow-up) per week, per channel.',
+  fn: (enquiries) => {
+    const n = enquiries.filter(r => r.outcome !== 'Existing client').sort((a, b) => a.date.localeCompare(b.date));
+    const weeks = [...new Set(n.map(r => r.week))];
+    return ['All', 'Phone', 'WhatsApp', 'Web form'].flatMap(channel => weeks.map(week => {
+      const rs = n.filter(r => r.week === week && (channel === 'All' || r.channel === channel));
+      return { channel, week, enquiries: rs.length, passed: rs.filter(r => r.outcome === 'Booked' || r.outcome === 'Needs follow-up').length };
+    }));
+  }
+});
+
+dash.calc('week_avg', {
+  inputs: ['weekly'],
+  title: 'Weekly average',
+  description: 'Average enquiries and hand-offs per week across the weeks in the log, per channel.',
+  fn: (weekly) => ['All', 'Phone', 'WhatsApp', 'Web form'].map(channel => {
+    const rs = weekly.filter(r => r.channel === channel);
+    const sum = k => rs.reduce((a, r) => a + r[k], 0);
+    return { channel, weeks: rs.length, avg_enquiries: Math.round(sum('enquiries') / rs.length * 10) / 10, avg_passed: Math.round(sum('passed') / rs.length * 10) / 10 };
+  })
+});
+
+dash.calc('reply', {
+  inputs: ['enquiries'],
+  title: 'Replies within 1 hour',
+  description: 'Per channel: answered within 1 hour, slower, or no reply time recorded.',
+  fn: (enquiries) => ['Phone', 'WhatsApp', 'Web form'].map(channel => {
+    const rs = enquiries.filter(r => r.channel === channel && r.outcome !== 'Existing client');
+    return { channel, yes: rs.filter(r => r.answered_within_1h === 'Yes').length, no: rs.filter(r => r.answered_within_1h === 'No').length, not_recorded: rs.filter(r => r.answered_within_1h === 'Not recorded').length, total: rs.length };
+  })
+});
+
+dash.calc('checks', {
+  inputs: ['enquiries'],
+  title: 'Five checks',
+  description: 'Pass, fail and unclear counts for each of the five qualification checks, per channel.',
+  fn: (enquiries) => {
+    const list = [['check_real_project', 'Real project, not just advice'], ['check_service_area', 'In Pune city or PCMC'], ['check_timeline', 'Workable timeline'], ['check_budget', 'Budget not clearly too low'], ['check_decision_maker', 'Decision-maker involved']];
+    return ['All', 'Phone', 'WhatsApp', 'Web form'].flatMap(channel => {
+      const rs = enquiries.filter(r => r.outcome !== 'Existing client' && (channel === 'All' || r.channel === channel));
+      return list.map(([col, check]) => ({ channel, check, pass: rs.filter(r => r[col] === 'Pass').length, fail: rs.filter(r => r[col] === 'Fail').length, unclear: rs.filter(r => r[col] === 'Unclear').length }));
+    });
+  }
+});
+
+dash.calc('declines', {
+  inputs: ['enquiries'],
+  title: 'Reasons for declining',
+  description: 'Declined enquiries counted by reason, per channel, largest first.',
+  fn: (enquiries) => ['All', 'Phone', 'WhatsApp', 'Web form'].flatMap(channel => {
+    const m = new Map();
+    enquiries.filter(r => r.outcome === 'Declined' && (channel === 'All' || r.channel === channel)).forEach(r => m.set(r.decline_reason, (m.get(r.decline_reason) || 0) + 1));
+    return [...m].map(([reason, n]) => ({ channel, reason, n })).sort((a, b) => b.n - a.n || a.reason.localeCompare(b.reason));
+  })
+});
+
+const fmtInt = d3.format(',');
+const fmtPct = d3.format('.0%');
+const fmtDate = d3.utcFormat('%b %-d');
+const fmtVal = (v, f) => v == null ? 'No record' : f === 'pct' ? fmtPct(v) : fmtInt(v);
+const enc = s => encodeURIComponent(s);
+const chNow = () => dash.params().channel || 'All';
+const inCh = r => chNow() === 'All' || r.channel === chNow();
+
+const C = { terra: '#B5532C', teal: '#1E5B5A', haldi: '#C9952B', indigo: '#2F3B6B', maroon: '#8A2F2F', sage: '#BDB29B', ink: '#2A1F17' };
+const outcomeColor = o => ({ 'Booked': C.teal, 'Needs follow-up': C.haldi, 'Early stage': C.sage, 'Declined': C.indigo, 'Lost': C.maroon })[o] || C.sage;
+const REPLY = [['yes', 'Within 1 hour', () => C.teal], ['no', 'Slower or missed', () => C.maroon], ['not_recorded', 'Not recorded', () => C.sage]];
+const ENQ_FROM_NOTES = Math.round(200 * 7 / 30); // "200 enquiries a month" from the class notes
+
+function boxState(el, d) {
+  if (d.status !== 'loading') el.classList.remove('dash-skeleton');
+  if (d.status !== 'ok') {
+    el.replaceChildren();
+    if (d.status === 'error' || d.status === 'connect') { const f = document.createElement('div'); f.className = 'ag-fail'; f.textContent = 'Failed to load'; el.appendChild(f); }
+    return false;
+  }
+  return true;
+}
+function showTip(box, ev, title, lines) {
+  let t = box.querySelector('.ag-tip');
+  if (!t) { t = document.createElement('div'); t.className = 'ag-tip'; box.appendChild(t); }
+  t.replaceChildren();
+  const h = document.createElement('div'); h.className = 'ag-tip-h'; h.textContent = title; t.appendChild(h);
+  lines.forEach(([c, label, val]) => {
+    const r = document.createElement('div'); r.className = 'ag-tip-r';
+    if (c) { const s = document.createElement('span'); s.className = 'ag-sw'; s.style.background = c; r.appendChild(s); }
+    const a = document.createElement('span'); a.textContent = label;
+    const b = document.createElement('b'); b.textContent = val;
+    r.append(a, b); t.appendChild(r);
+  });
+  t.style.display = 'block';
+  const br = box.getBoundingClientRect();
+  let x = ev.clientX - br.left + 12;
+  if (x + t.offsetWidth > br.width) x = Math.max(0, ev.clientX - br.left - t.offsetWidth - 12);
+  t.style.left = x + 'px'; t.style.top = (ev.clientY - br.top + 12) + 'px';
+}
+function hideTip(box) { const t = box.querySelector('.ag-tip'); if (t) t.style.display = 'none'; }
+function measure(svg, labels) {
+  const g = svg.append('g'); let w = 0;
+  labels.forEach(l => { const t = g.append('text').text(l); w = Math.max(w, t.node().getComputedTextLength()); });
+  g.remove(); return w;
+}
+function legend(el, items) {
+  el.replaceChildren(...items.map(([label, color]) => {
+    const s = document.createElement('span'); const sw = document.createElement('i'); sw.className = 'ag-sw'; sw.style.background = color;
+    s.append(sw, document.createTextNode(label)); return s;
+  }));
+}
+function emptyNote(el, text) { el.replaceChildren(); const p = document.createElement('p'); p.className = 'ag-n'; p.textContent = text; el.appendChild(p); el.style.minHeight = ''; }
+
+function hBars(el, rows, opt) {
+  el.replaceChildren();
+  if (!rows.length) return emptyNote(el, opt.empty || 'Nothing to show for this channel.');
+  const W = Math.max(el.clientWidth, 260), rowH = opt.rowH || 34, H = rows.length * rowH + 22;
+  const svg = d3.select(el).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img');
+  const lw = measure(svg, rows.map(opt.label)), vw = measure(svg, rows.map(opt.valueText));
+  const m = { l: lw + 12, r: vw + 12, t: 4, b: 18 };
+  const x = d3.scaleLinear([0, opt.max(rows) || 1], [m.l, W - m.r]);
+  const y = d3.scaleBand(rows.map(opt.label), [m.t, H - m.b]).padding(0.32);
+  const ticks = x.ticks(Math.max(2, Math.floor((W - m.l - m.r) / 70))).filter(Number.isInteger);
+  svg.append('g').selectAll('line').data(ticks).join('line').attr('x1', d => x(d)).attr('x2', d => x(d)).attr('y1', m.t).attr('y2', H - m.b).style('stroke', 'var(--cds-chart-grid)');
+  svg.append('g').selectAll('text').data(ticks).join('text').attr('x', d => x(d)).attr('y', H - 4).attr('text-anchor', 'middle').text(fmtInt);
+  rows.forEach(r => {
+    const yy = y(opt.label(r)), bh = Math.min(y.bandwidth(), 28), off = (y.bandwidth() - bh) / 2;
+    svg.append('text').attr('class', 'ag-strong').attr('x', m.l - 8).attr('y', yy + y.bandwidth() / 2).attr('dy', '0.35em').attr('text-anchor', 'end').text(opt.label(r));
+    let x0 = 0;
+    opt.segments(r).forEach(([name, v, color]) => {
+      if (!v) return;
+      svg.append('rect').attr('x', x(x0)).attr('y', yy + off).attr('height', bh).attr('width', Math.max(1, x(x0 + v) - x(x0) - 2)).attr('rx', 4).style('fill', color)
+        .on('mousemove', ev => showTip(el, ev, opt.label(r), opt.tip(r))).on('mouseleave', () => hideTip(el));
+      x0 += v;
+    });
+    svg.append('text').attr('class', 'ag-strong').attr('x', x(x0) + 6).attr('y', yy + y.bandwidth() / 2).attr('dy', '0.35em').text(opt.valueText(r));
+  });
+  el.style.minHeight = H + 'px';
+}
+
+function weeklyChart(el, rows, targets) {
+  el.replaceChildren();
+  const W = Math.max(el.clientWidth, 260), H = 240;
+  const svg = d3.select(el).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img');
+  const y = d3.scaleLinear([0, Math.max(d3.max(rows, r => r.enquiries) || 1, ...targets.map(t => t[1]))], [H - 24, 18]).nice();
+  const ticks = y.ticks(4).filter(Number.isInteger);
+  const tLabels = targets.map(([name, v]) => `${name} ${fmtInt(v)}`);
+  const m = { l: measure(svg, ticks.map(fmtInt)) + 10, r: (tLabels.length ? measure(svg, tLabels) : 0) + 12 };
+  const keys = [['enquiries', 'Enquiries', C.terra], ['passed', 'Passed to designers', C.teal]];
+  const x0 = d3.scaleBand(rows.map(r => r.week), [m.l, W - m.r]).padding(0.25);
+  const x1 = d3.scaleBand(keys.map(k => k[0]), [0, x0.bandwidth()]).padding(0.12);
+  svg.append('g').selectAll('line').data(ticks).join('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', d => y(d)).attr('y2', d => y(d)).style('stroke', 'var(--cds-chart-grid)');
+  svg.append('g').selectAll('text').data(ticks).join('text').attr('x', m.l - 6).attr('y', d => y(d)).attr('dy', '0.35em').attr('text-anchor', 'end').text(fmtInt);
+  rows.forEach(r => {
+    keys.forEach(([k, , color]) => {
+      const bw = Math.min(x1.bandwidth(), 32), bx = x0(r.week) + x1(k) + (x1.bandwidth() - bw) / 2;
+      svg.append('rect').attr('x', bx).attr('y', y(r[k])).attr('width', bw).attr('height', Math.max(0, y(0) - y(r[k]))).attr('rx', 4).style('fill', color)
+        .on('mousemove', ev => showTip(el, ev, r.week, keys.map(([kk, l, c]) => [c, l, fmtInt(r[kk])]))).on('mouseleave', () => hideTip(el));
+      svg.append('text').attr('class', 'ag-strong').attr('x', bx + bw / 2).attr('y', y(r[k]) - 4).attr('text-anchor', 'middle').text(fmtInt(r[k]));
+    });
+    svg.append('text').attr('x', x0(r.week) + x0.bandwidth() / 2).attr('y', H - 6).attr('text-anchor', 'middle').text(r.week);
+  });
+  targets.forEach(([name, v, color], i) => {
+    svg.append('line').attr('x1', m.l).attr('x2', W - m.r + 4).attr('y1', y(v)).attr('y2', y(v)).style('stroke', color).attr('stroke-width', 1.5).attr('stroke-dasharray', '5 4');
+    const ty = y(v) + (targets.length > 1 && i === 1 && Math.abs(y(targets[0][1]) - y(v)) < 14 ? 14 : 0);
+    svg.append('text').attr('class', 'ag-strong').attr('x', W - m.r + 8).attr('y', ty).attr('dy', '0.35em').text(tLabels[i]);
+  });
+  legend(document.getElementById('lg-weekly'), keys.map(([, l, c]) => [l, c]).concat(targets.map(([n, , c]) => [`${n} (dashed)`, c])));
+}
+
+// Channel filter
+const filterBtns = [...document.querySelectorAll('#ag-filter button')];
+filterBtns.forEach(b => b.addEventListener('click', () => dash.setParams({ channel: b.dataset.ch })));
+
+// Sort and search for the full table
+let sortKey = 'id', sortDir = 1, query = '';
+document.querySelectorAll('#ag-table th button').forEach(b => b.addEventListener('click', () => {
+  const k = b.dataset.k; if (k === sortKey) sortDir = -sortDir; else { sortKey = k; sortDir = 1; }
+  drawTables();
+}));
+document.getElementById('ag-q').addEventListener('input', e => { query = e.target.value.toLowerCase(); drawTables(); });
+
+function cellRow(tbody, key, cells) {
+  const tr = document.createElement('tr'); tr.dataset.key = key;
+  cells.forEach(c => { const td = document.createElement('td'); if (c instanceof Node) td.appendChild(c); else td.textContent = c; tr.appendChild(td); });
+  tbody.appendChild(tr); return tr;
+}
+function pill(text, color) {
+  const p = document.createElement('span'); p.className = 'ag-pill';
+  const sw = document.createElement('i'); sw.className = 'ag-sw'; sw.style.background = color; sw.style.marginRight = '6px';
+  p.append(sw, document.createTextNode(text)); return p;
+}
+
+function drawTables() {
+  const d = dash.data('enquiries');
+  const tb = document.querySelector('#ag-table tbody'), ta = document.querySelector('#ag-actions tbody');
+  tb.replaceChildren(); ta.replaceChildren();
+  document.querySelectorAll('#ag-table th').forEach(th => { const b = th.querySelector('button'); if (b) th.setAttribute('aria-sort', b.dataset.k === sortKey ? (sortDir > 0 ? 'ascending' : 'descending') : 'none'); });
+  if (d.status !== 'ok') return;
+  d.data.filter(r => inCh(r) && (r.outcome === 'Needs follow-up' || r.outcome === 'Early stage')).forEach(r =>
+    cellRow(ta, r.id, [r.id, CH_LABEL[r.channel] || r.channel, r.location, pill(r.outcome, outcomeColor(r.outcome)), r.next_step]));
+  if (!ta.children.length) { const tr = document.createElement('tr'); const td = document.createElement('td'); td.colSpan = 5; td.textContent = 'Nothing waiting for this channel.'; tr.appendChild(td); ta.appendChild(tr); }
+  d.data.filter(r => inCh(r) && (!query || [r.id, r.channel, r.location, r.outcome, r.summary, r.decline_reason, r.next_step].join(' ').toLowerCase().includes(query)))
+    .slice().sort((a, b) => sortDir * String(a[sortKey]).localeCompare(String(b[sortKey])))
+    .forEach(r => {
+      const tr = cellRow(tb, r.id, [r.id, CH_LABEL[r.channel] || r.channel, fmtDate(new Date(r.date)), r.location,
+        pill(r.outcome + (r.decline_reason ? ` · ${r.decline_reason}` : ''), outcomeColor(r.outcome)), r.answered_within_1h, r.summary]);
+      tr.lastChild.className = 'ag-sum ag-hide-narrow';
+      const w = tr.children[5]; w.className = r.answered_within_1h === 'Yes' ? 'ag-pass' : r.answered_within_1h === 'No' ? 'ag-failc' : '';
+    });
+}
+
+// Tabs
+const tabs = [...document.querySelectorAll('#ag-tabs button')];
+let tabNow = 'overview';
+function showTab(id) {
+  tabNow = id;
+  tabs.forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === id)));
+  document.querySelectorAll('#ag .ag-page').forEach(p => { p.hidden = p.id !== id; });
+  document.getElementById('ag-filter').style.visibility = id === 'overview' ? 'visible' : 'hidden';
+  dash.setLink(id);
+  draw();
+}
+tabs.forEach(b => b.addEventListener('click', () => showTab(b.dataset.tab)));
+
+// Weekly targets
+const inEnq = document.getElementById('t-enq'), inHand = document.getElementById('t-hand');
+const readNum = el => { const v = el.value.trim(); if (!v) return null; const n = Number(v); return Number.isInteger(n) && n > 0 && n < 10000 ? n : undefined; };
+[[inEnq, 'enq_target'], [inHand, 'handoff_target']].forEach(([el, name]) => {
+  el.addEventListener('change', () => { const n = readNum(el); if (n !== undefined) dash.setParams({ [name]: n }); });
+  el.addEventListener('blur', () => { const v = dash.params()[name]; el.value = v ?? ''; });
+});
+const resetBtn = document.getElementById('t-reset');
+resetBtn.addEventListener('click', () => { dash.resetParams(); });
+
+const GUIDE_MAIN = ['Services', 'Project types', 'Typical scope', 'Timelines', 'Service area', "What we don't do"];
+const GUIDE_PRICE = ['Pricing: residential', 'Pricing: commercial', 'Pricing note', 'What affects pricing', 'Never say to a client', 'Approved pricing answer'];
+const GUIDE_CLASS = { 'Pricing: residential': 'ag-price', 'Pricing: commercial': 'ag-price', "What we don't do": 'ag-no', 'Never say to a client': 'ag-never' };
+function drawGuide() {
+  const g = dash.data('guide');
+  [['sv-main', GUIDE_MAIN]].forEach(([id, sections]) => {
+    const box = document.getElementById(id);
+    if (!boxState(box, g)) return;
+    box.replaceChildren();
+    const rows = g.data.slice().sort((a, b) => Number(a.order) - Number(b.order));
+    sections.forEach(sec => {
+      const items = rows.filter(r => r.section === sec);
+      if (!items.length) return;
+      const card = document.createElement('div'); card.className = 'ag-card';
+      if (sec === 'Approved pricing answer') card.classList.add('ag-wide');
+      const h = document.createElement('h3'); h.className = 'ag-t'; h.textContent = sec; h.style.marginBottom = 'var(--cds-gap-md)'; card.appendChild(h);
+      if (sec === 'Approved pricing answer') {
+        const q = document.createElement('blockquote'); q.className = 'ag-quote'; q.textContent = items[0].detail; card.appendChild(q);
+      } else {
+        const ul = document.createElement('ul'); ul.className = 'ag-gl ' + (GUIDE_CLASS[sec] || '');
+        items.forEach(r => {
+          const li = document.createElement('li');
+          const b = document.createElement('b'); b.textContent = r.item; li.appendChild(b);
+          if (r.detail) { const s = document.createElement('span'); s.textContent = r.detail; li.appendChild(s); }
+          ul.appendChild(li);
+        });
+        card.appendChild(ul);
+      }
+      box.appendChild(card);
+    });
+    box.style.minHeight = '';
+  });
+}
+
+function draw() {
+  const ch = chNow();
+  const p = dash.params();
+  const enqT = p.enq_target ?? null, handT = p.handoff_target ?? null;
+  if (document.activeElement !== inEnq) inEnq.value = enqT ?? '';
+  if (document.activeElement !== inHand) inHand.value = handT ?? '';
+  filterBtns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.ch === ch)));
+
+  const k = dash.data('kpis');
+  const row = k.status === 'ok' ? k.data.find(r => r.channel === ch) : null;
+  const allRow = k.status === 'ok' ? k.data.find(r => r.channel === 'All') : null;
+  document.querySelectorAll('#ag .ag-fixed[data-source="kpis"]').forEach(el => {
+    if (k.status !== 'loading') el.classList.remove('dash-skeleton');
+    el.textContent = allRow ? fmtVal(allRow[el.dataset.field], el.dataset.fmt) : '—';
+  });
+  const wa = dash.data('week_avg');
+  const avg = wa.status === 'ok' ? wa.data.find(r => r.channel === ch) : null;
+  document.querySelectorAll('#ag [data-source="week_avg"]').forEach(el => {
+    el.dataset.where = `channel=${enc(ch)}`;
+    if (wa.status !== 'loading') el.classList.remove('dash-skeleton');
+    el.textContent = avg ? d3.format(',.1~f')(avg[el.dataset.field]) : '—';
+  });
+  const status = (actual, target, el) => {
+    if (!el) return;
+    if (ch !== 'All') { el.textContent = 'Targets are set for all channels together.'; el.className = 'ag-kn'; return; }
+    if (target == null) { el.textContent = 'No target set yet.'; el.className = 'ag-kn'; return; }
+    if (actual == null) { el.textContent = ''; return; }
+    const ok = actual >= target;
+    el.textContent = `Target ${fmtInt(target)} a week: ${ok ? 'on target' : 'below target'}.`;
+    el.className = 'ag-kn ' + (ok ? 'ag-pass' : 'ag-failc');
+  };
+  status(avg && avg.avg_enquiries, enqT, document.getElementById('st-enq'));
+  status(avg && avg.avg_passed, handT, document.getElementById('st-hand'));
+
+  drawGuide();
+  if (tabNow !== 'overview') return;
+  document.querySelectorAll('#ag [data-source="kpis"][data-field]:not(.ag-fixed)').forEach(el => {
+    el.dataset.where = `channel=${enc(ch)}`;
+    if (k.status !== 'loading') el.classList.remove('dash-skeleton');
+    el.textContent = row ? fmtVal(row[el.dataset.field], el.dataset.fmt) : '—';
+  });
+  const kv = document.getElementById('kv-1h');
+  kv.classList.toggle('ag-bad', !!row && row.within_1h_share != null && row.within_1h_share < 1);
+  kv.classList.toggle('ag-ok', !!row && row.within_1h_share === 1);
+  document.getElementById('tk-reply').hidden = !!row && row.reply_known === 0;
+  document.getElementById('tk-noreply').hidden = !(row && row.reply_known === 0);
+
+  const we = document.getElementById('ag-week'), wd = dash.data('weekly');
+  const targets = ch === 'All' ? [['Enquiry target', enqT, C.ink], ['Hand-off target', handT, C.terra]].filter(t => t[1] != null) : [];
+  if (boxState(we, wd)) weeklyChart(we, wd.data.filter(r => r.channel === ch), targets);
+
+  legend(document.getElementById('lg-reply'), REPLY.map(([, l, c]) => [l, c()]));
+  const re = document.getElementById('ag-reply'), rd = dash.data('reply');
+  if (boxState(re, rd)) hBars(re, rd.data.filter(r => ch === 'All' || r.channel === ch), {
+    label: r => CH_LABEL[r.channel], max: rs => d3.max(rs, r => r.total), valueText: r => `${fmtInt(r.yes)} of ${fmtInt(r.total)}`,
+    segments: r => REPLY.map(([key, l, c]) => [l, r[key], c()]),
+    tip: r => REPLY.map(([key, l, c]) => [c(), l, fmtInt(r[key])])
+  });
+
+  const tc = document.querySelector('#ag-checks tbody'), cd = dash.data('checks');
+  tc.replaceChildren();
+  if (cd.status === 'ok') cd.data.filter(r => r.channel === ch).forEach(r => {
+    const tr = cellRow(tc, `${enc(r.channel)},${enc(r.check)}`, [r.check, fmtInt(r.pass), fmtInt(r.fail), fmtInt(r.unclear)]);
+    tr.children[1].className = 'ag-pass'; tr.children[2].className = r.fail ? 'ag-failc' : ''; tr.children[3].className = r.unclear ? 'ag-unc' : '';
+  });
+
+  const de = document.getElementById('ag-dec'), dd = dash.data('declines');
+  if (boxState(de, dd)) hBars(de, dd.data.filter(r => r.channel === ch), {
+    label: r => r.reason, max: rs => d3.max(rs, r => r.n), rowH: 30, valueText: r => fmtInt(r.n),
+    segments: r => [['Declined', r.n, C.indigo]], tip: r => [[null, 'Enquiries', fmtInt(r.n)]],
+    empty: 'No enquiries were turned away on this channel.'
+  });
+
+  drawTables();
+}
+dash.onData(draw);
+{ const named = location.hash.slice(1); showTab(['overview', 'ninechecks', 'services', 'stack'].includes(named) ? named : 'overview'); }
+</script>
+
+</div></body></html>

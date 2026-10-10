@@ -1,0 +1,41 @@
+id,channel,date,time,week,weekday,after_hours,segment,location,outcome,decline_reason,reply_hours,answered_within_1h,check_real_project,check_service_area,check_timeline,check_budget,check_decision_maker,asked_price,price_quoted,next_step,summary
+T01,Phone,2026-09-02,10:23,1–7 Sep,Tue,No,Home,Kothrud,Booked,,0,Yes,Pass,Pass,Pass,Pass,Pass,No,No,,"3BHK full redesign, 1,400 sq ft, done by March. Friend referral."
+T02,Phone,2026-09-03,14:41,1–7 Sep,Wed,No,Home,Wakad,Booked,,0,Yes,Pass,Pass,Pass,Pass,Unclear,Yes,No,,"2BHK full redesign, 950 sq ft. Pushed twice for a price range."
+T03,Phone,2026-09-03,16:15,1–7 Sep,Wed,No,Home,Nashik,Declined,Outside service area,0,Yes,Unclear,Fail,Unclear,Pass,Unclear,No,No,,Home office and study in Nashik.
+T04,Phone,2026-09-04,11:07,1–7 Sep,Thu,No,Home,Not given,Declined,Advice only,0,Yes,Fail,Unclear,Unclear,Pass,Unclear,No,No,,"Wanted colour and furniture ideas, no execution."
+T05,Phone,2026-09-05,10:52,1–7 Sep,Fri,No,Home,Koregaon Park,Booked,,0,Yes,Pass,Pass,Pass,Pass,Unclear,No,No,,"4BHK, 2,400 sq ft, back in by February. Referral via Nikhil's friend."
+T06,Phone,2026-09-05,15:28,1–7 Sep,Fri,No,Office,Baner,Booked,,0,Yes,Pass,Pass,Pass,Pass,Pass,No,No,,"800 sq ft bare shell, 20 seats, operational by December."
+T07,Phone,2026-09-08,09:44,8–14 Sep,Mon,Yes,Home,Not given,Declined,Timeline too short,0,Yes,Pass,Unclear,Fail,Pass,Unclear,No,No,Wait for call back about a November start,Living room and kitchen before Diwali (3 weeks). May call back for November.
+T08,Phone,2026-09-09,22:47,8–14 Sep,Tue,Yes,Unknown,Nanded City,Lost,,11.5,No,Unclear,Unclear,Unclear,Pass,Unclear,No,No,Try the number again,"Missed call, no voicemail. Call-back next morning unanswered."
+T09,Phone,2026-09-10,11:32,8–14 Sep,Wed,No,Existing client,Viman Nagar,Existing client,,0,Yes,N/A,N/A,N/A,N/A,N/A,No,No,,Complaint: designer silent for 5 days. Escalated to studio head.
+T10,Phone,2026-09-11,14:04,8–14 Sep,Thu,No,Home,Kharadi,Declined,Budget too low,0,Yes,Pass,Pass,Unclear,Fail,Unclear,No,No,,1BHK kitchen and bedroom on 1 to 1.5 lakh.
+T11,Phone,2026-09-12,10:18,8–14 Sep,Fri,No,Home,Baner,Booked,,0,Yes,Pass,Pass,Unclear,Pass,Pass,No,No,,"Rented 2BHK, landlord agrees, no structural work."
+T12,Phone,2026-09-15,10:05,15–21 Sep,Mon,No,Home,Kalyani Nagar,Booked,,0,Yes,Pass,Pass,Pass,Pass,Unclear,No,No,,"5,500 sq ft new villa, move in March. Wants principal designer on site."
+T13,Phone,2026-09-16,12:19,15–21 Sep,Tue,No,Home,Aundh,Booked,,0,Yes,Pass,Pass,Unclear,Pass,Unclear,Yes,No,,"3BHK, 1,100 sq ft. Pushed for a price range, then booked."
+T14,Phone,2026-09-17,11:41,15–21 Sep,Wed,No,Home,Hadapsar,Needs follow-up,,0,Yes,Pass,Pass,Unclear,Pass,Unclear,No,No,Book consultation with both parents attending,Son calling for parents' new 3BHK. Parents decide and will attend.
+T15,Phone,2026-09-18,15:12,15–21 Sep,Thu,No,Home,Undri,Booked,,0,Yes,Pass,Pass,Pass,Pass,Pass,No,No,,"2BHK, 875 sq ft, possession in 6 weeks. Site visit possible now."
+T16,Phone,2026-09-19,10:38,15–21 Sep,Fri,No,Home,Viman Nagar,Booked,,,No,Pass,Pass,Unclear,Pass,Unclear,No,No,,3BHK. First call on Monday was never logged. Caller upset.
+T17,Phone,2026-09-22,14:16,22–28 Sep,Mon,No,Home,Pimple Saudagar,Booked,,0,Yes,Pass,Pass,Pass,Pass,Unclear,No,No,,"3BHK, 1,050 sq ft, done by March. First call dropped."
+T18,Phone,2026-09-23,11:55,22–28 Sep,Tue,No,Office,Not given,Declined,Too small,0,Yes,Fail,Unclear,Unclear,Pass,Pass,No,No,,180 sq ft coworking pod.
+T19,Phone,2026-09-24,16:02,22–28 Sep,Wed,No,Other,Koregaon Park,Declined,"Out of scope (restaurant, gym)",0,Yes,Fail,Pass,Unclear,Pass,Unclear,No,No,,Restaurant interiors.
+T20,Phone,2026-09-25,09:15,22–28 Sep,Thu,Yes,Home,Magarpatta,Booked,,0,Yes,Pass,Pass,Pass,Pass,Pass,No,No,,"2BHK, 900 sq ft, January execution start."
+W01,WhatsApp,2026-09-03,19:14,1–7 Sep,Wed,Yes,Home,Viman Nagar,Booked,,16.6,No,Pass,Pass,Pass,Pass,Unclear,No,No,,"4BHK, 1,800 sq ft. Sent a follow-up before anyone replied."
+W02,WhatsApp,2026-09-08,14:31,8–14 Sep,Mon,No,Home,Not given,Lost,,43.9,No,Unclear,Unclear,Unclear,Pass,Unclear,Yes,No,,Asked per sq ft rate for a 2BHK. Reply came 2 days later; no answer.
+W03,WhatsApp,2026-09-12,10:45,8–14 Sep,Fri,No,Home,Pimple Nilakh,Booked,,0.3,Yes,Pass,Pass,Unclear,Pass,Pass,No,No,,"3BHK full home, in Hindi. Booked for Saturday 4 October."
+W04,WhatsApp,2026-09-15,15:18,15–21 Sep,Mon,No,Office,Chinchwad,Booked,,0.5,Yes,Pass,Pass,Pass,Pass,Unclear,No,No,,"1,200 sq ft bare shell, 30 seats, January. Asked for a calendar link."
+W05,WhatsApp,2026-09-20,18:44,15–21 Sep,Sat,Yes,Home,Baner,Lost,,39.5,No,Unclear,Pass,Unclear,Pass,Unclear,No,No,,"2BHK. Saturday evening message, reply on Monday, no answer."
+W06,WhatsApp,2026-09-17,11:22,15–21 Sep,Wed,No,Home,Koregaon Park,Booked,,0.3,Yes,Pass,Pass,Pass,Pass,Pass,No,No,,"New 3BHK, possession 15 October. Referral. Site visit 21 or 22 October."
+W07,WhatsApp,2026-09-05,16:52,1–7 Sep,Fri,No,Other,Kothrud,Declined,"Out of scope (restaurant, gym)",17.6,No,Fail,Pass,Unclear,Pass,Pass,No,No,,"2,500 sq ft gym."
+W08,WhatsApp,2026-09-10,08:44,8–14 Sep,Wed,Yes,Home,Aundh,Booked,,,No,Pass,Pass,Unclear,Pass,Unclear,No,No,,"2BHK, 850 sq ft. Says first message went unanswered for 4 days. Escalated."
+W09,WhatsApp,2026-09-25,15:18,22–28 Sep,Thu,No,Home,Aundh,Needs follow-up,,19.8,No,Pass,Pass,Unclear,Pass,Unclear,No,No,Confirm the site visit date,"Living, dining, maybe kitchen in a 3BHK. Sent photos. Site visit offered."
+W10,WhatsApp,2026-09-22,18:12,22–28 Sep,Mon,No,Home,Hinjewadi,Early stage,,16.1,No,Unclear,Pass,Unclear,Pass,Unclear,No,No,Re-contact in 4 to 6 weeks,"3BHK, just exploring. Re-contact in 4 to 6 weeks."
+F01,Web form,2026-09-01,09:44,1–7 Sep,Mon,Yes,Home,Kalyani Nagar,Needs follow-up,,,Not recorded,Pass,Pass,Pass,Pass,Pass,No,No,Call to book consultation,"2BHK plus home office corner, 920 sq ft. Execution December to February."
+F02,Web form,2026-09-04,19:12,1–7 Sep,Thu,Yes,Home,Baner,Needs follow-up,,,Not recorded,Pass,Pass,Pass,Pass,Unclear,No,No,Call to book consultation and explain the process,Master bedroom and living room in a 3BHK. No deadline. Referral.
+F03,Web form,2026-09-06,11:18,1–7 Sep,Sat,Yes,Home,Talegaon,Declined,Outside service area,,Not recorded,Pass,Fail,Pass,Pass,Unclear,No,No,,"3BHK independent house, 15 to 20 lakh."
+F04,Web form,2026-09-09,14:37,8–14 Sep,Tue,No,Unknown,Pune,Early stage,,,Not recorded,Unclear,Pass,Unclear,Unclear,Unclear,Yes,No,Call back as requested; ask for project details,Wants to know cost. Asked for a call. Almost no details.
+F05,Web form,2026-09-11,10:05,8–14 Sep,Thu,No,Office,Hinjewadi,Needs follow-up,,,Not recorded,Pass,Pass,Pass,Pass,Unclear,No,No,"Call today: wants to move fast, open by 15 Jan","2,200 sq ft shell, 60 people, operational by 15 January. Repeat client referral."
+F06,Web form,2026-09-14,20:52,8–14 Sep,Sun,Yes,Home,NIBM Road,Needs follow-up,,,Not recorded,Pass,Pass,Pass,Pass,Unclear,No,No,Book consultation; include an honest talk on style fit,"4BHK, 1,950 sq ft, execution from February 2027. Comparing 3 studios."
+F07,Web form,2026-09-16,15:11,15–21 Sep,Tue,No,Unknown,Pune,Early stage,,,Not recorded,Unclear,Pass,Unclear,Pass,Unclear,Yes,No,Reply with the standard pricing answer; ask for project details,Only wants a price list by email. No other details.
+F08,Web form,2026-09-18,18:44,15–21 Sep,Thu,No,Home,Wakad,Declined,Timeline too short,,Not recorded,Pass,Pass,Fail,Pass,Unclear,No,No,,Living room and kitchen in 3 weeks before guests arrive.
+F09,Web form,2026-09-20,11:30,15–21 Sep,Sat,Yes,Home,Kondhwa,Needs follow-up,,,Not recorded,Pass,Pass,Pass,Pass,Unclear,No,No,Call to book consultation,"New 3BHK, 1,150 sq ft, move in March 2027. Builder referral."
+F10,Web form,2026-09-26,16:22,22–28 Sep,Fri,No,Home,Aundh,Needs follow-up,,,Not recorded,Pass,Pass,Pass,Pass,Pass,No,No,Book consultation; plan a collaborative process,"3BHK with two home offices, 1,300 sq ft. Wants a collaborative process."
